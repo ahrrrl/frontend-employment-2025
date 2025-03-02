@@ -1,3 +1,9 @@
+import Counter from '../components/Counter';
+
 export default function Home() {
-  return <section>홈 페이지</section>;
+  return (
+    <section>
+      <Counter />
+    </section>
+  );
 }

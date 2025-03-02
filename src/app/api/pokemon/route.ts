@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
   const response = await fetch(`https://pokeapi.co/api/v2/pokemon?${query.toString()}`);
   const data = await response.json();
-
+  const pokemonCount = data.count; // 전체 포켓몬 수
   const pokemonData = await Promise.all(
     data.results.map(async (pokemon: { name: string; url: string }) => {
       const res = await fetch(pokemon.url);
@@ -34,5 +34,8 @@ export async function GET(request: NextRequest) {
     }),
   );
 
-  return NextResponse.json(pokemonData);
+  return NextResponse.json({
+    results: pokemonData, // 포켓몬 데이터
+    total: pokemonCount, // 전체 포켓몬 수
+  });
 }
