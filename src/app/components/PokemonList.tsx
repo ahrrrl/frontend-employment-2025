@@ -4,19 +4,14 @@ import { useState } from 'react';
 import { useThemeStore } from '../stores/themesStore';
 import Image from 'next/image';
 import { usePokemonQuery } from '../hooks/usePokemonQuery';
-import { PokemonResponse } from '../types/pokemon';
 
-interface PokemonListProps {
-  initialData: PokemonResponse;
-}
-
-export default function PokemonList({ initialData }: PokemonListProps) {
+export default function PokemonList() {
   const [limit] = useState<number>(20);
   const [offset, setOffset] = useState<number>(0);
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
 
   // 클라이언트에서 데이터 가져오기
-  const { data, isLoading, isError, error, isFetching } = usePokemonQuery(limit, offset, initialData);
+  const { data, isLoading, isError, error, isFetching } = usePokemonQuery(limit, offset);
 
   const handlePrevious = () => {
     setOffset(Math.max(0, offset - limit));
@@ -41,7 +36,7 @@ export default function PokemonList({ initialData }: PokemonListProps) {
   const totalPages = data ? Math.ceil(data.total / limit) : 0;
   const currentPage = Math.floor(offset / limit) + 1;
 
-  if (isLoading && !isFetching) {
+  if (isLoading) {
     return <div className="text-center p-4">포켓몬 찾는 중...</div>;
   }
 
@@ -50,7 +45,7 @@ export default function PokemonList({ initialData }: PokemonListProps) {
   }
 
   if (!data) {
-    return <div className="text-center p-4">포켓몬을 찾을 수 없어요!</div>;
+    return <div className="text-center p-4">포켓몬이 존재하지 않습니다.</div>;
   }
 
   return (
