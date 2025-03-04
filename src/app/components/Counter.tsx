@@ -2,26 +2,28 @@
 
 import React, { useState, useEffect } from 'react';
 import { useThemeStore } from '../stores/themesStore';
+import { getLocalStorage, setLocalStorage } from '@/lib/utils';
 
 const Counter = () => {
-  const [count, setCount] = useState<number>(Number(localStorage.getItem('count')) || 0);
+  // 함수형 초기값을 사용하여 컴포넌트 최초 렌더링 시에만 실행되도록 함
+  const [count, setCount] = useState<number>(0);
 
-  // 컴포넌트 내부에서 선택자 사용
   const isDarkMode = useThemeStore((state) => state.isDarkMode);
   const toggleTheme = useThemeStore((state) => state.toggleTheme);
 
-  // 로컬스토리에서 count 값 가져오기
   useEffect(() => {
-    const savedCount = localStorage.getItem('count');
-    if (savedCount) {
-      setCount(parseInt(savedCount, 10));
-    }
+    const storedCount = getLocalStorage('count', 0);
+    setCount(storedCount);
   }, []);
 
-  // count 값이 변경될 때마다 테마 변경
+  // count 값 변경될 때 localStorage 저장 및 테마 변경
   useEffect(() => {
+    // Link 컴포넌트 사용으로인한 재랜더링 시 count 값이 0으로 초기화되는 문제 해결
+    if (count === 0) {
+      return;
+    }
     toggleTheme(count);
-    localStorage.setItem('count', count.toString());
+    setLocalStorage('count', count);
   }, [count, toggleTheme]);
 
   const incrementCount = () => {
