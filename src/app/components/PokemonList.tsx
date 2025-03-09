@@ -61,7 +61,11 @@ export default function PokemonList() {
               } p-4 rounded-lg shadow-md flex flex-col items-center`}
             >
               <div className="w-36 h-36 relative">
-                <Image src={poke.image} alt={poke.name} width={600} height={800} className="object-cover" />
+                {poke.image ? (
+                  <Image src={poke.image} alt={poke.name} width={600} height={800} className="object-cover" />
+                ) : (
+                  'No Image'
+                )}
               </div>
             </div>
             <h3 className="text-sm font-semibold capitalize">{poke.name}</h3>
